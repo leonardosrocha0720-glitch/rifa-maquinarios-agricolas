@@ -482,7 +482,7 @@
 
   /* ---------- helpers ---------- */
   var PRICE = 0.35;
-  var qty = 40;
+  var qty = 50;
   var $ = function(s){ return document.querySelector(s); };
   var brl = function(n){ return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); };
 
@@ -644,12 +644,12 @@
   }
   function setQty(n){
     n = Math.floor(Number(n) || 1);
-    qty = Math.min(100000, Math.max(18, n));
+    qty = Math.min(100000, Math.max(50, n));
     updateUI();
   }
   function changeQty(delta){ setQty(qty + delta); }
 
-  $('#btnClear').addEventListener('click', function(){ setQty(18); });
+  $('#btnClear').addEventListener('click', function(){ setQty(50); });
   $('#btnMinus').addEventListener('click', function(){ changeQty(-1); });
   $('#btnPlus').addEventListener('click',  function(){ changeQty(1); });
 
@@ -700,7 +700,7 @@
   });
 
   $('#buyBtn').addEventListener('click', function(){
-    if(qty < 18){ toast('Mínimo de 18 números'); return; }
+    if(qty < 50){ toast('Mínimo de 50 números'); return; }
     document.getElementById('ckQty').textContent = qty + ' números';
     document.getElementById('ckTotal').textContent = brl(qty * PRICE);
     document.getElementById('ckName').value = '';

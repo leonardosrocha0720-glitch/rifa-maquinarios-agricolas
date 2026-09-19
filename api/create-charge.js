@@ -20,8 +20,8 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Nome, telefone e quantidade são obrigatórios' });
     }
 
-    if (qty < 18) {
-      return res.status(400).json({ error: 'Mínimo de 18 cotas (R$ 6,30)' });
+    if (qty < 50) {
+      return res.status(400).json({ error: 'Mínimo de 50 cotas (R$ 17,50)' });
     }
 
     const phoneClean = phone.replace(/\D/g, '');
