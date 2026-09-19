@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rifa Maquinários Agrícolas</title>
+<meta name="description" content="Rifa Maquinários Agrícolas — Colheitadeira John Deere ou 2 Milhões na Conta. Participe por apenas R$ 0,35 a cota.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#28a745;
+    --green-dark:#1e7e34;
+    --green-light:#e9f5ec;
+    --page:#ececec;
+    --card:#ffffff;
+    --header:#1c1c1c;
+    --text:#1a1a1a;
+    --muted:#777;
+    --border:#ddd;
+    --soft:#f5f5f5;
+    --radius:8px;
+    --grad:linear-gradient(135deg,#000000 0%,#1a5c0f 50%,#28a745 100%);
+    --grad-hover:linear-gradient(135deg,#000000 0%,#13460b 50%,#1e7e34 100%);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+    background:var(--page);
+    color:var(--text);
+    font-size:14px;
+    line-height:1.4;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%}
+  [hidden]{display:none!important}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  .money{font-variant-numeric:tabular-nums}
+
+  .wrap{max-width:520px;margin:0 auto;background:var(--card);min-height:100vh;box-shadow:0 0 24px rgba(0,0,0,.08)}
+
+  /* 1. HEADER */
+  .topbar{
+    background:var(--header);color:#fff;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 14px;
+    padding-top:calc(12px + env(safe-area-inset-top,0px));
+    position:sticky;top:0;z-index:30;
+  }
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;letter-spacing:-.2px}
+  .logo .dot{width:26px;height:26px;border-radius:6px;background:var(--grad);display:grid;place-items:center;font-size:14px}
+  .menu-btn{font-size:20px;color:#fff;line-height:1;padding:4px 6px;border-radius:6px}
+  .menu-btn:hover{background:rgba(255,255,255,.12)}
+
+  /* 2. CAROUSEL */
+  .carousel{position:relative;height:240px;overflow:hidden;background:#87CEEB}
+  .track{display:flex;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+  .slide{min-width:100%;height:100%;position:relative;overflow:hidden}
+  .scene{position:absolute;inset:0;background:linear-gradient(#87CEEB 0%,#b7e2f0 38%,#8ec14a 55%,#6da23c 72%,#558B2F 100%)}
+  .scene svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-48%);width:86%;max-width:400px;height:auto}
+  .shade{position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.82),rgba(0,0,0,.35) 45%,transparent)}
+  .slide-body{position:absolute;left:0;right:0;bottom:0;padding:14px;color:#fff}
+  .tag{display:inline-block;background:var(--grad);color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:4px 9px;border-radius:999px;margin-bottom:7px}
+  .slide-title{font-size:17px;font-weight:800;line-height:1.25;margin:0;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+  .slide-sub{font-size:12px;opacity:.9;margin:3px 0 22px}
+  .nav{
+    position:absolute;top:50%;transform:translateY(-50%);
+    width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.92);
+    color:#1a1a1a;font-size:15px;font-weight:700;display:grid;place-items:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:3;
+  }
+  .nav:hover{background:#fff}
+  .nav.prev{left:10px} .nav.next{right:10px}
+  .dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:6px;z-index:3}
+  .dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.45);transition:.25s;cursor:pointer}
+  .dots span.on{background:#fff;width:18px;border-radius:999px}
+
+  /* 3. MEUS BILHETES */
+  .tickets-btn{
+    width:100%;background:#fff;border-left:4px solid var(--green);
+    border-bottom:1px solid var(--border);
+    padding:13px 14px;display:flex;align-items:center;justify-content:center;gap:8px;
+    font-weight:700;font-size:14px;
+  }
+  .tickets-btn:hover{background:var(--green-light)}
+
+  /* 4. INFO BAR */
+  .infobar{
+    background:var(--soft);padding:10px 14px;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+  }
+  .infobar .left{font-size:12px;color:#444;font-weight:500}
+  .sep{color:var(--border);font-size:14px}
+  .infobar .right{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}
+  .price-badge{background:var(--grad);color:#fff;font-weight:800;font-size:13px;padding:4px 10px;border-radius:6px}
+
+  /* 5. PROMO */
+  .section{padding:14px}
+  .sec-head{font-size:13px;font-weight:700;margin:0 0 10px}
+  .promo-list{display:flex;flex-direction:column;gap:7px}
+  .promo{
+    background:var(--grad);color:#fff;border-radius:var(--radius);
+    padding:10px 12px;font-size:13px;font-weight:600;text-align:center;width:100%;
+    transition:background .15s,transform .1s;
+  }
+  .promo:hover{background:var(--grad-hover)}
+  .promo:active{transform:scale(.99)}
+  .promo.on{background:var(--grad-hover);box-shadow:0 0 0 2px #fff,0 0 0 4px var(--green)}
+  .promo-note{font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0}
+  .divider{border-bottom:1px solid var(--border)}
+
+  /* 6. QTY */
+  .qty-row{display:flex;gap:6px;margin-bottom:8px}
+  .qbtn{
+    background:var(--grad);color:#fff;border-radius:var(--radius);
+    min-width:44px;height:44px;font-size:18px;font-weight:700;display:grid;place-items:center;flex:0 0 auto;
+  }
+  .qbtn:hover{background:var(--grad-hover)}
+  .qbtn.clear{background:#fff;color:#444;border:1px solid var(--border);font-size:15px}
+  .qbtn.clear:hover{background:var(--soft)}
+  #qtyInput{
+    flex:1;min-width:0;height:44px;border:1px solid var(--border);border-radius:var(--radius);
+    text-align:center;font-family:inherit;font-size:15px;font-weight:700;color:var(--text);
+    background:#fff;font-variant-numeric:tabular-nums;
+  }
+  #qtyInput:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(40,167,69,.15)}
+  .add-row{display:flex;gap:6px}
+  .add{
+    flex:1;background:var(--grad);color:#fff;border-radius:var(--radius);padding:11px 4px;
+    font-size:11px;font-weight:700;line-height:1.25;text-align:center;
+  }
+  .add b{display:block;font-size:14px}
+  .add:hover{background:var(--grad-hover)}
+
+  /* 7. BUY */
+  .buy{
+    width:100%;background:var(--grad);color:#fff;padding:14px;border-radius:var(--radius);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;
+  }
+  .buy:hover{background:var(--grad-hover)}
+  .buy .b-left{display:flex;align-items:center;gap:10px}
+  .buy .arrow{font-size:19px;font-weight:700}
+  .buy .b-title{font-size:15px;font-weight:800;line-height:1.15}
+  .buy .b-sub{font-size:10.5px;opacity:.85}
+  .buy .b-right{text-align:right}
+  .buy .t-label{font-size:10.5px;opacity:.85}
+  .buy .t-value{font-size:17px;font-weight:800;line-height:1.2}
+
+  /* 8. TIERS */
+  .tier{
+    border:1px solid #14380c;border-radius:var(--radius);padding:10px 12px;margin-bottom:7px;
+    display:flex;align-items:center;gap:10px;background:var(--grad);color:#fff;transition:.2s;
+  }
+  .tier.on{background:var(--grad-hover);border-color:var(--green);box-shadow:0 0 0 2px var(--green)}
+  .tier .t-thr{font-weight:800;font-size:13px;min-width:72px}
+  .tier .t-mid{flex:1;min-width:0}
+  .tier .t-qty{font-size:12px;font-weight:600}
+  .tier .t-chance{font-size:10.5px;color:rgba(255,255,255,.8)}
+  .tier .t-rw{font-size:11px;font-weight:600;color:#fff;text-align:right;max-width:38%}
+
+  /* 9. ACCORDION */
+  .acc-head{
+    width:100%;display:flex;align-items:center;justify-content:space-between;
+    padding:14px;font-size:13px;font-weight:700;border-top:1px solid var(--border);
+  }
+  .acc-head:hover{background:var(--soft)}
+  .acc-body{padding:0 14px 14px;font-size:12.5px;color:#555;line-height:1.6}
+
+  /* 10 & 11. LISTAS */
+  .row{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    border:1px solid var(--border);border-radius:var(--radius);padding:9px 11px;margin-bottom:6px;background:#fff;
+  }
+  .row.won{background:#fafafa}
+  .prize{background:var(--grad);color:#fff;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:6px;white-space:nowrap}
+  .chip{background:#333;color:#fff;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px;letter-spacing:1px;font-variant-numeric:tabular-nums}
+  .row .mid{flex:1;min-width:0;font-size:11.5px;font-weight:700;color:#444}
+  .who{font-size:12px;font-weight:700;white-space:nowrap}
+  .who.free{color:var(--muted);font-weight:500}
+  .who.hot{color:var(--green-dark)}
+  .toggle{
+    width:100%;border:1px solid var(--border);border-radius:var(--radius);
+    padding:10px;font-size:12px;font-weight:700;color:#444;background:#fff;margin-top:4px;
+  }
+  .toggle:hover{background:var(--soft)}
+  .count{color:var(--muted);font-weight:600}
+
+  /* 12. SHARE */
+  .share{display:flex;gap:6px}
+  .share button{
+    flex:1;color:#fff;border-radius:var(--radius);padding:10px 2px;font-size:10.5px;font-weight:700;
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+  }
+  .share button:hover{filter:brightness(1.1)}
+  .share svg{width:17px;height:17px;fill:#fff}
+  .fb{background:#1877F2}.tg{background:#0088CC}.tw{background:#000}.wa{background:#25D366}
+
+  /* 13. FOOTER */
+  footer{
+    text-align:center;background:#fff;border-top:1px solid var(--border);
+    padding:18px 14px;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));
+    font-size:11px;color:var(--muted);
+  }
+
+  /* TOAST */
+  #toast{
+    position:fixed;left:50%;bottom:24px;transform:translate(-50%,120%);
+    background:#1c1c1c;color:#fff;padding:11px 18px;border-radius:999px;
+    font-size:12.5px;font-weight:600;z-index:100;opacity:0;
+    transition:transform .3s cubic-bezier(.2,.8,.3,1),opacity .3s;
+    box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:90vw;text-align:center;
+  }
+  #toast.show{transform:translate(-50%,0);opacity:1}
+
+  @media(max-width:380px){
+    .slide-title{font-size:15.5px}
+    .tier .t-thr{min-width:62px;font-size:12px}
+    .add{font-size:10px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 1. HEADER -->
+  <header class="topbar">
+    <div class="logo"><span class="dot">🚜</span> Rifa Maquinários Agrícolas</div>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+  </header>
+
+  <!-- 2. CAROUSEL -->
+  <div class="carousel">
+    <div class="track" id="track"></div>
+    <button class="nav prev" id="prev" aria-label="Anterior">&lsaquo;</button>
+    <button class="nav next" id="next" aria-label="Próximo">&rsaquo;</button>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <!-- 3. MEUS BILHETES -->
+  <button class="tickets-btn" id="myTickets">🛒 Meus Bilhetes</button>
+
+  <!-- 4. INFO BAR -->
+  <div class="infobar">
+    <div class="left">📅 Sorteio 20/09/2026 11:00</div>
+    <div class="sep">|</div>
+    <div class="right">Por apenas <span class="price-badge money" id="unitPrice">R$ 0,35</span></div>
+  </div>
+
+  <!-- 5. PROMOÇÃO -->
+  <section class="section divider">
+    <h2 class="sec-head">🎁 Promoção — Compre mais barato!</h2>
+    <div class="promo-list">
+      <button class="promo" data-qty="100">A cada 100 por <span class="money">R$ 25,00</span></button>
+      <button class="promo" data-qty="300">A cada 300 por <span class="money">R$ 70,00</span></button>
+      <button class="promo" data-qty="500">A cada 500 por <span class="money">R$ 100,00</span></button>
+    </div>
+    <p class="promo-note">Quanto mais números, mais chances de ganhar!</p>
+  </section>
+
+  <!-- 6. SELETOR DE QUANTIDADE + 7. COMPRAR -->
+  <section class="section">
+    <div class="qty-row">
+      <button class="qbtn clear" id="btnClear" aria-label="Limpar">✕</button>
+      <button class="qbtn" id="btnMinus" aria-label="Diminuir">−</button>
+      <input id="qtyInput" type="text" inputmode="numeric" aria-label="Quantidade de números" value="40 números">
+      <button class="qbtn" id="btnPlus" aria-label="Aumentar">+</button>
+    </div>
+    <div class="add-row">
+      <button class="add" data-add="10"><b>+10</b>SELECIONAR</button>
+      <button class="add" data-add="20"><b>+20</b>SELECIONAR</button>
+      <button class="add" data-add="30"><b>+30</b>SELECIONAR</button>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <button class="buy" id="buyBtn">
+      <span class="b-left">
+        <span class="arrow">→</span>
+        <span>
+          <span class="b-title">Comprar agora</span>
+          <span class="b-sub" style="display:block">Garantir minhas chances</span>
+        </span>
+      </span>
+      <span class="b-right">
+        <span class="t-label" style="display:block">Total a pagar</span>
+        <span class="t-value money" id="total">R$ 14,00</span>
+      </span>
+    </button>
+  </section>
+
+  <!-- 8. CAIXAS INSTANTÂNEAS (TIERS) -->
+  <section class="section divider">
+    <h2 class="sec-head">🎁 Caixas — quantidades!</h2>
+    <div id="tiers"></div>
+  </section>
+
+  <!-- 9. DESCRIÇÃO -->
+  <button class="acc-head" id="accHead" aria-expanded="false">
+    <span>📋 Descrição / Informações</span><span id="accArrow">▼</span>
+  </button>
+  <div class="acc-body" id="accBody" hidden>
+    Não perca essa chance! Rifa de maquinários agrícolas com sorteio pela Loteria Federal.
+  </div>
+
+  <!-- 10. CAIXAS DISPONÍVEIS -->
+  <section class="section divider" style="border-top:1px solid var(--border)">
+    <h2 class="sec-head">🎁 Caixas — Prêmio instantâneo! <span class="count" id="boxCount"></span></h2>
+    <div id="boxes"></div>
+    <button class="toggle" id="boxToggle">▼ Ver mais</button>
+  </section>
+
+  <!-- 11. BILHETES ESPECIAIS -->
+  <section class="section divider">
+    <h2 class="sec-head">🎟️ Bilhetes — Prêmio instantâneo! <span class="count" id="tkCount"></span></h2>
+    <div id="specials"></div>
+    <button class="toggle" id="tkToggle">▼ Ver mais</button>
+  </section>
+
+  <!-- 12. COMPARTILHAR -->
+  <section class="section">
+    <h2 class="sec-head">📢 Compartilhar</h2>
+    <div class="share">
+      <button class="fb" data-share="facebook">
+        <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
+        Facebook
+      </button>
+      <button class="tg" data-share="telegram">
+        <svg viewBox="0 0 24 24"><path d="M21.9 4.3 18.9 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.1c-.3.3-.5.5-1 .5l.3-4.6 8.4-7.6c.4-.3-.1-.5-.6-.2L7.2 13 2.7 11.6c-1-.3-1-1 .2-1.5l17.6-6.8c.8-.3 1.5.2 1.4 1z"/></svg>
+        Telegram
+      </button>
+      <button class="tw" data-share="twitter">
+        <svg viewBox="0 0 24 24"><path d="M18.2 2h3.3l-7.2 8.2L22.8 22h-6.6l-5.2-6.8L5.1 22H1.8l7.7-8.8L1.5 2h6.8l4.7 6.2L18.2 2zm-1.2 18h1.8L7.1 3.9H5.2L17 20z"/></svg>
+        Twitter/X
+      </button>
+      <button class="wa" data-share="whatsapp">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3.1-1.3-5.1-4.4-5.3-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .7.5l.9 2.2c.1.2.1.4 0 .6l-.4.5-.3.4c-.1.1-.2.3 0 .5.1.3.7 1.2 1.5 1.9 1 .9 1.8 1.2 2.1 1.3.2.1.4.1.5-.1l.8-.9c.2-.2.3-.2.5-.1l2 1c.3.1.5.2.5.3.1.2.1.6-.1 1.2z"/></svg>
+        WhatsApp
+      </button>
+    </div>
+  </section>
+
+  <!-- 13. FOOTER -->
+  <footer>Copyright © 2026 Rifa Maquinários Agrícolas.</footer>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- helpers ---------- */
+  var PRICE = 0.35;
+  var qty = 40;
+  var $ = function(s){ return document.querySelector(s); };
+  var brl = function(n){ return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); };
+
+  var toastEl = $('#toast'), toastTimer;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
+  }
+
+  /* ---------- 2. carousel ---------- */
+  var HARVESTER =
+  '<svg viewBox="0 0 400 210" role="img" aria-label="Colheitadeira John Deere">'+
+    '<defs>'+
+      '<linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1">'+
+        '<stop offset="0" stop-color="#4a9e39"/><stop offset="1" stop-color="#2d6822"/>'+
+      '</linearGradient>'+
+      '<linearGradient id="glassG" x1="0" y1="0" x2="1" y2="1">'+
+        '<stop offset="0" stop-color="#dff1fb"/><stop offset="1" stop-color="#8fc4de"/>'+
+      '</linearGradient>'+
+    '</defs>'+
+    '<!-- poeira / chao -->'+
+    '<ellipse cx="205" cy="190" rx="165" ry="12" fill="rgba(0,0,0,.18)"/>'+
+    '<!-- tubo descarga -->'+
+    '<path d="M250 78 L148 44 L148 30 L258 66 Z" fill="#367C2B" stroke="#245219" stroke-width="2" stroke-linejoin="round"/>'+
+    '<rect x="140" y="26" width="18" height="22" rx="3" fill="#FFDE00" stroke="#c9ac00" stroke-width="2"/>'+
+    '<!-- corpo principal -->'+
+    '<path d="M150 96 H300 a10 10 0 0 1 10 10 v52 a8 8 0 0 1 -8 8 H150 Z" fill="url(#bodyG)" stroke="#245219" stroke-width="2.5"/>'+
+    '<!-- tanque de graos -->'+
+    '<path d="M196 96 V70 a6 6 0 0 1 6 -6 h46 a6 6 0 0 1 6 6 v26 Z" fill="#367C2B" stroke="#245219" stroke-width="2.5"/>'+
+    '<rect x="196" y="88" width="60" height="8" fill="#FFDE00" opacity=".9"/>'+
+    '<!-- faixa amarela lateral -->'+
+    '<rect x="152" y="120" width="150" height="9" fill="#FFDE00"/>'+
+    '<text x="228" y="147" font-family="Inter,Arial" font-size="13" font-weight="800" fill="#FFDE00" text-anchor="middle" letter-spacing="1">JOHN DEERE</text>'+
+    '<!-- cabine -->'+
+    '<path d="M256 96 V62 a8 8 0 0 1 8 -8 h30 a8 8 0 0 1 8 8 v34 Z" fill="#367C2B" stroke="#245219" stroke-width="2.5"/>'+
+    '<path d="M262 92 V66 a4 4 0 0 1 4 -4 h26 a4 4 0 0 1 4 4 v26 Z" fill="url(#glassG)" stroke="#245219" stroke-width="2"/>'+
+    '<rect x="258" y="48" width="44" height="7" rx="3" fill="#FFDE00" stroke="#c9ac00" stroke-width="1.5"/>'+
+    '<!-- escapamento -->'+
+    '<rect x="238" y="40" width="9" height="26" rx="3" fill="#555"/>'+
+    '<!-- canal alimentador -->'+
+    '<path d="M150 104 L100 118 L100 156 L150 160 Z" fill="#3a8a2c" stroke="#245219" stroke-width="2.5" stroke-linejoin="round"/>'+
+    '<!-- cabecote / plataforma de corte -->'+
+    '<path d="M30 122 H102 v40 H30 a6 6 0 0 1 -6 -6 v-28 a6 6 0 0 1 6 -6 Z" fill="#FFDE00" stroke="#c9ac00" stroke-width="2.5"/>'+
+    '<path d="M24 158 H102 v8 H24 Z" fill="#c9ac00"/>'+
+    '<!-- dentes da barra de corte -->'+
+    '<path d="M26 166 l6 10 l6 -10 M42 166 l6 10 l6 -10 M58 166 l6 10 l6 -10 M74 166 l6 10 l6 -10 M90 166 l6 10 l6 -10" fill="none" stroke="#c9ac00" stroke-width="3" stroke-linejoin="round"/>'+
+    '<!-- molinete -->'+
+    '<g>'+
+      '<circle cx="62" cy="116" r="30" fill="none" stroke="#FFDE00" stroke-width="5"/>'+
+      '<circle cx="62" cy="116" r="6" fill="#367C2B" stroke="#245219" stroke-width="2"/>'+
+      '<path d="M62 86 V146 M32 116 H92 M41 95 L83 137 M83 95 L41 137" stroke="#FFDE00" stroke-width="4" stroke-linecap="round"/>'+
+    '</g>'+
+    '<!-- roda traseira grande (direita) -->'+
+    '<circle cx="288" cy="160" r="36" fill="#1b1b1b"/>'+
+    '<circle cx="288" cy="160" r="26" fill="#2e2e2e" stroke="#0f0f0f" stroke-width="2"/>'+
+    '<circle cx="288" cy="160" r="15" fill="#FFDE00" stroke="#c9ac00" stroke-width="2"/>'+
+    '<circle cx="288" cy="160" r="5" fill="#367C2B"/>'+
+    '<g stroke="#4a4a4a" stroke-width="4" stroke-linecap="round">'+
+      '<path d="M288 124 v10 M288 186 v10 M252 160 h10 M314 160 h10 M263 135 l7 7 M306 178 l7 7 M313 135 l-7 7 M270 178 l-7 7"/>'+
+    '</g>'+
+    '<!-- roda dianteira pequena (esquerda) -->'+
+    '<circle cx="168" cy="172" r="22" fill="#1b1b1b"/>'+
+    '<circle cx="168" cy="172" r="14" fill="#2e2e2e" stroke="#0f0f0f" stroke-width="2"/>'+
+    '<circle cx="168" cy="172" r="7" fill="#FFDE00" stroke="#c9ac00" stroke-width="2"/>'+
+  '</svg>';
+
+  var SLIDES = [
+    { tag:'Adquira já!', title:'Colheitadeira John Deere Ou 2 Milhões na Conta', sub:'Participe Agora!' },
+    { tag:'Adquira já!', title:'Colheitadeira John Deere Ou 2 Milhões na Conta', sub:'Participe Agora!' },
+    { tag:'Adquira já!', title:'Colheitadeira John Deere Ou 2 Milhões na Conta', sub:'Participe Agora!' }
+  ];
+
+  var track = $('#track'), dots = $('#dots'), slideIdx = 0, timer;
+
+  SLIDES.forEach(function(s,i){
+    var el = document.createElement('div');
+    el.className = 'slide';
+    el.innerHTML =
+      '<div class="scene">'+HARVESTER+'</div>'+
+      '<div class="shade"></div>'+
+      '<div class="slide-body">'+
+        '<span class="tag">'+s.tag+'</span>'+
+        '<h1 class="slide-title">'+s.title+'</h1>'+
+        '<p class="slide-sub">'+s.sub+'</p>'+
+      '</div>';
+    track.appendChild(el);
+
+    var d = document.createElement('span');
+    if(i===0) d.className = 'on';
+    d.addEventListener('click', function(){ go(i); });
+    dots.appendChild(d);
+  });
+
+  function render(){
+    track.style.transform = 'translateX(-'+(slideIdx*100)+'%)';
+    Array.prototype.forEach.call(dots.children, function(d,i){
+      d.classList.toggle('on', i===slideIdx);
+    });
+  }
+  function go(i){
+    slideIdx = (i + SLIDES.length) % SLIDES.length;
+    render();
+    restart();
+  }
+  function restart(){
+    clearInterval(timer);
+    timer = setInterval(function(){ slideIdx = (slideIdx+1)%SLIDES.length; render(); }, 4000);
+  }
+  $('#prev').addEventListener('click', function(){ go(slideIdx-1); });
+  $('#next').addEventListener('click', function(){ go(slideIdx+1); });
+  restart();
+
+  /* ---------- 8. tiers ---------- */
+  var TIERS = [
+    { q:40,  v:14,  chance:'1 chance de contemplação Instantânea', rw:'Recebe 1 Caixa Instantânea 🎁' },
+    { q:50,  v:17.5,chance:'2 chances de contemplação Instantânea', rw:'Recebe 2 Caixas 🎁' },
+    { q:100, v:25,  chance:'5 chances de contemplação Instantânea', rw:'Recebe 5 Caixas 🎁' },
+    { q:200, v:50,  chance:'6 chances de contemplação Instantânea', rw:'Recebe 6 Caixas 🎁' },
+    { q:500, v:100, chance:'12 chances de contemplação Instantânea',rw:'Recebe 12 Caixas 🎁' }
+  ];
+  var tiersEl = $('#tiers');
+  TIERS.forEach(function(t){
+    var el = document.createElement('div');
+    el.className = 'tier';
+    el.dataset.q = t.q;
+    el.innerHTML =
+      '<span class="t-thr money">'+brl(t.v)+'</span>'+
+      '<span class="t-mid">'+
+        '<span class="t-qty" style="display:block">'+t.q+' números</span>'+
+        '<span class="t-chance">'+t.chance+'</span>'+
+      '</span>'+
+      '<span class="t-rw">'+t.rw+'</span>';
+    el.addEventListener('click', function(){ setQty(t.q); });
+    tiersEl.appendChild(el);
+  });
+
+  /* ---------- estado / UI ---------- */
+  var qtyInput = $('#qtyInput');
+  var editing = false;
+
+  function updateUI(){
+    if(!editing) qtyInput.value = qty + (qty === 1 ? ' número' : ' números');
+    $('#total').textContent = brl(qty * PRICE);
+    $('#unitPrice').textContent = brl(PRICE);
+
+    // tier ativa = maior faixa alcançada pela quantidade atual
+    var active = -1;
+    TIERS.forEach(function(t,i){ if(qty >= t.q) active = i; });
+    Array.prototype.forEach.call(tiersEl.children, function(el,i){
+      el.classList.toggle('on', i === active);
+    });
+
+    // promo ativa
+    Array.prototype.forEach.call(document.querySelectorAll('.promo'), function(b){
+      b.classList.toggle('on', Number(b.dataset.qty) === qty);
+    });
+  }
+  function setQty(n){
+    n = Math.floor(Number(n) || 1);
+    qty = Math.min(100000, Math.max(1, n));
+    updateUI();
+  }
+  function changeQty(delta){ setQty(qty + delta); }
+
+  $('#btnClear').addEventListener('click', function(){ setQty(1); });
+  $('#btnMinus').addEventListener('click', function(){ changeQty(-1); });
+  $('#btnPlus').addEventListener('click',  function(){ changeQty(1); });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.add'), function(b){
+    b.addEventListener('click', function(){ changeQty(Number(b.dataset.add)); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.promo'), function(b){
+    b.addEventListener('click', function(){
+      setQty(Number(b.dataset.qty));
+      toast('Promoção aplicada: ' + b.dataset.qty + ' números');
+    });
+  });
+
+  qtyInput.addEventListener('focus', function(){ editing = true; qtyInput.value = String(qty); qtyInput.select(); });
+  qtyInput.addEventListener('input', function(){
+    var n = parseInt(qtyInput.value.replace(/\D/g,''), 10);
+    if(!isNaN(n)){ qty = Math.min(100000, Math.max(1, n)); updateUI(); }
+  });
+  qtyInput.addEventListener('blur', function(){ editing = false; setQty(qty); });
+  qtyInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') qtyInput.blur(); });
+
+  /* ---------- botões diversos ---------- */
+  $('#myTickets').addEventListener('click', function(){ toast('Em breve!'); });
+  $('#menuBtn').addEventListener('click', function(){ toast('Menu em breve!'); });
+  $('#buyBtn').addEventListener('click', function(){
+    toast('Redirecionando para pagamento... ' + qty + ' números • ' + brl(qty*PRICE));
+  });
+
+  /* ---------- 9. accordion ---------- */
+  var accHead = $('#accHead'), accBody = $('#accBody'), accArrow = $('#accArrow');
+  accHead.addEventListener('click', function(){
+    var open = accBody.hidden;
+    accBody.hidden = !open;
+    accArrow.textContent = open ? '▲' : '▼';
+    accHead.setAttribute('aria-expanded', String(open));
+  });
+
+  /* ---------- 10. caixas ---------- */
+  var BOXES = [
+    { prize:'CRF 300 F 0 KM',  who:'Igor' },
+    { prize:'CRF 300 F 0 KM',  who:null },
+    { prize:'BIZ 125 0 KM',    who:'Aline' },
+    { prize:'BIZ 125 0 KM',    who:null },
+    { prize:'R$ 500,00',       who:'Eduarda' },
+    { prize:'R$ 500,00',       who:null },
+    { prize:'R$ 500,00',       who:'Caciel' },
+    { prize:'R$ 500,00',       who:null },
+    { prize:'R$ 500,00',       who:'Ester' },
+    { prize:'R$ 500,00',       who:null },
+    { prize:'R$ 100,00',       who:'Marlene' },
+    { prize:'R$ 100,00',       who:null },
+    { prize:'R$ 100,00',       who:'Douglas' },
+    { prize:'R$ 100,00',       who:null },
+    { prize:'R$ 100,00',       who:'Vanessa' },
+    { prize:'R$ 100,00',       who:null },
+    { prize:'R$ 100,00',       who:null },
+    { prize:'R$ 100,00',       who:null },
+    { prize:'R$ 100,00',       who:null },
+    { prize:'R$ 100,00',       who:null },
+    { prize:'R$ 100,00',       who:null },
+    { prize:'R$ 100,00',       who:null }
+  ];
+  var boxesEl = $('#boxes');
+  BOXES.forEach(function(b,i){
+    var el = document.createElement('div');
+    el.className = 'row' + (b.who ? ' won' : '');
+    el.innerHTML =
+      '<span class="prize money">'+b.prize+'</span>'+
+      '<span class="mid">Caixa #'+String(i+1).padStart(2,'0')+'</span>'+
+      '<span class="who '+(b.who?'hot':'free')+'">'+(b.who ? b.who+' 🔥' : 'Disponível')+'</span>';
+    if(i >= 8) el.hidden = true;
+    boxesEl.appendChild(el);
+  });
+  $('#boxCount').textContent = '(' + BOXES.filter(function(b){ return b.who; }).length + '/' + BOXES.length + ')';
+
+  var boxOpen = false;
+  $('#boxToggle').addEventListener('click', function(){
+    boxOpen = !boxOpen;
+    Array.prototype.forEach.call(boxesEl.children, function(el,i){ if(i>=8) el.hidden = !boxOpen; });
+    this.textContent = boxOpen ? '▲ Ver menos' : '▼ Ver mais';
+  });
+
+  /* ---------- 11. bilhetes especiais ---------- */
+  var SPECIALS = [
+    { n:'0000000', who:'Cordeiro' },
+    { n:'1111111', who:null },
+    { n:'2222222', who:'Jhessica' },
+    { n:'3333333', who:'Gilmaria' },
+    { n:'4444444', who:null },
+    { n:'5555555', who:'Rafaela' },
+    { n:'6666666', who:null },
+    { n:'7777777', who:'Marcos' },
+    { n:'8888888', who:null },
+    { n:'9999999', who:'Thiago' }
+  ];
+  var spEl = $('#specials');
+  SPECIALS.forEach(function(s,i){
+    var el = document.createElement('div');
+    el.className = 'row' + (s.who ? ' won' : '');
+    el.innerHTML =
+      '<span class="chip">'+s.n+'</span>'+
+      '<span class="mid money">'+brl(5000)+'</span>'+
+      '<span class="who '+(s.who?'hot':'free')+'">'+(s.who ? s.who+' 🔥' : 'Disponível')+'</span>';
+    if(i >= 5) el.hidden = true;
+    spEl.appendChild(el);
+  });
+  $('#tkCount').textContent = '(' + SPECIALS.filter(function(s){ return s.who; }).length + '/' + SPECIALS.length + ')';
+
+  var tkOpen = false;
+  $('#tkToggle').addEventListener('click', function(){
+    tkOpen = !tkOpen;
+    Array.prototype.forEach.call(spEl.children, function(el,i){ if(i>=5) el.hidden = !tkOpen; });
+    this.textContent = tkOpen ? '▲ Ver menos' : '▼ Ver mais';
+  });
+
+  /* ---------- 12. compartilhar ---------- */
+  var SHARE_TEXT = 'Rifa Maquinários Agrícolas — Colheitadeira John Deere ou 2 Milhões na Conta! Cotas a partir de R$ 0,35.';
+  Array.prototype.forEach.call(document.querySelectorAll('.share button'), function(b){
+    b.addEventListener('click', function(){
+      var url = location.href;
+      var u = encodeURIComponent(url), t = encodeURIComponent(SHARE_TEXT);
+      var links = {
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u='+u,
+        telegram: 'https://t.me/share/url?url='+u+'&text='+t,
+        twitter:  'https://twitter.com/intent/tweet?url='+u+'&text='+t,
+        whatsapp: 'https://api.whatsapp.com/send?text='+t+'%20'+u
+      };
+      var net = b.dataset.share;
+      if(net === 'whatsapp' && navigator.share){
+        navigator.share({ title:'Rifa Maquinários Agrícolas', text:SHARE_TEXT, url:url }).catch(function(){
+          window.open(links[net], '_blank', 'noopener');
+        });
+        return;
+      }
+      window.open(links[net], '_blank', 'noopener,width=620,height=560');
+    });
+  });
+
+  updateUI();
+})();
+</script>
+</body>
+</html>
