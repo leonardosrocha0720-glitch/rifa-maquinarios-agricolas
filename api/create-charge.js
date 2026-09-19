@@ -157,7 +157,10 @@ module.exports = async (req, res) => {
       return res.status(502).json({ error: buckpayData.message || 'Falha ao gerar a cobrança PIX' });
     }
 
-    const pixCode = buckpayData.pix && buckpayData.pix.code;
+    // A BuckPay devolve a transação dentro de um envelope "data".
+    const tx = buckpayData.data || buckpayData;
+
+    const pixCode = tx.pix && tx.pix.code;
     if (!pixCode) {
       console.error('create-charge: resposta da BuckPay sem pix.code:', raw.slice(0, 500));
       return res.status(502).json({ error: 'Falha ao gerar a cobrança PIX' });
@@ -168,7 +171,7 @@ module.exports = async (req, res) => {
       .from('purchases')
       .insert({
         user_id: user.id,
-        transaction_id: buckpayData.id,
+        transaction_id: tx.id,
         external_id: externalId,
         qty,
         amount,
@@ -178,8 +181,8 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       pix_code: pixCode,
-      qrcode_base64: buckpayData.pix && buckpayData.pix.qrcode_base64,
-      transaction_id: buckpayData.id,
+      qrcode_base64: tx.pix && tx.pix.qrcode_base64,
+      transaction_id: tx.id,
       total: (amount / 100).toFixed(2)
     });
 

@@ -17,7 +17,15 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
 
   try {
-    const { event, status, id: transaction_id } = req.body;
+    // A BuckPay envelopa a transação em "data" na criação da cobrança; aceitamos
+    // as duas formas para o postback até confirmar o formato com o suporte.
+    const payload = req.body || {};
+    const tx = payload.data || payload;
+    const event = payload.event || tx.event;
+    const status = tx.status || payload.status;
+    const transaction_id = tx.id || payload.id;
+
+    console.log('webhook recebido:', JSON.stringify({ event, status, transaction_id }));
 
     if (event === 'transaction.processed' && status === 'paid') {
       const { data: purchase } = await supabase
@@ -25,14 +33,18 @@ module.exports = async (req, res) => {
         .select('*')
         .eq('transaction_id', transaction_id)
         .eq('status', 'pending')
-        .single();
+        .maybeSingle();
 
-      if (purchase) {
+      if (!purchase) {
+        console.error('webhook: nenhuma compra pendente para transaction_id', transaction_id);
+      } else {
         const numbers = generateNumbers(purchase.qty);
-        await supabase
+        const { error: updateError } = await supabase
           .from('purchases')
           .update({ status: 'paid', numbers })
           .eq('id', purchase.id);
+        if (updateError) throw updateError;
+        console.log('webhook: compra', purchase.id, 'paga —', numbers.length, 'números gerados');
       }
     }
 
