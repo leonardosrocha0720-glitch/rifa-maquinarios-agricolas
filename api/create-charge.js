@@ -59,12 +59,33 @@ module.exports = async (req, res) => {
 
     const body = req.body || {};
     const name = typeof body.name === 'string' ? body.name.trim() : '';
-    const phoneClean = String(body.phone == null ? '' : body.phone).replace(/\D/g, '');
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+    const digits = String(body.phone == null ? '' : body.phone).replace(/\D/g, '');
     const qty = Number(body.qty);
 
-    if (!name || !phoneClean || !body.qty) {
-      return res.status(400).json({ error: 'Nome, telefone e quantidade são obrigatórios' });
+    if (!name || !email || !digits || !body.qty) {
+      return res.status(400).json({ error: 'Nome, e-mail, telefone e quantidade são obrigatórios' });
     }
+
+    // A BuckPay exige buyer.email; validação simples só para barrar digitação errada.
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      return res.status(400).json({ error: 'E-mail inválido' });
+    }
+
+    // Só tira o 55 quando o total de dígitos indica código do país: o DDD 55
+    // (Santa Maria/RS) é legítimo e não pode ser confundido com prefixo.
+    const phoneClean = (digits.length >= 12 && digits.indexOf('55') === 0)
+      ? digits.slice(2)
+      : digits;
+
+    if (phoneClean.length < 10 || phoneClean.length > 11) {
+      return res.status(400).json({ error: 'Telefone inválido: informe DDD + número' });
+    }
+
+    // A BuckPay exige o telefone com código do país (mínimo 12 caracteres).
+    // No banco seguimos gravando só os dígitos nacionais, para não quebrar a
+    // busca de "Meus Bilhetes" das compras já registradas.
+    const phoneIntl = `55${phoneClean}`;
 
     if (!Number.isInteger(qty)) {
       return res.status(400).json({ error: 'Quantidade inválida' });
@@ -116,7 +137,7 @@ module.exports = async (req, res) => {
         external_id: externalId,
         payment_method: 'pix',
         amount,
-        buyer: { name, phone: phoneClean },
+        buyer: { name, email, phone: phoneIntl },
         postback_url: `${baseUrl}/api/webhook`,
         postbackUrl: `${baseUrl}/api/webhook`
       })
