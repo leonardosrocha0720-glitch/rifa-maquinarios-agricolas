@@ -214,6 +214,72 @@
   }
   #toast.show{transform:translate(-50%,0);opacity:1}
 
+  /* ===== MODAIS ===== */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;
+    display:flex;align-items:flex-end;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity .25s;
+  }
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal-box{
+    background:#fff;border-radius:16px 16px 0 0;
+    width:100%;max-width:520px;padding:24px 16px;
+    padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));
+    transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.8,.3,1);
+    max-height:92vh;overflow-y:auto;
+  }
+  .modal-overlay.open .modal-box{transform:translateY(0)}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .modal-title{font-size:16px;font-weight:800;margin:0}
+  .modal-close{font-size:22px;color:var(--muted);line-height:1;padding:4px 8px;border-radius:6px}
+  .modal-close:hover{background:var(--soft)}
+  .form-group{margin-bottom:12px}
+  .form-label{display:block;font-size:12px;font-weight:700;color:#444;margin-bottom:5px}
+  .form-input{
+    width:100%;height:44px;border:1px solid var(--border);border-radius:var(--radius);
+    padding:0 12px;font-family:inherit;font-size:15px;color:var(--text);background:#fff;
+  }
+  .form-input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(40,167,69,.15)}
+  .form-hint{font-size:11px;color:var(--muted);margin-top:4px}
+  .btn-primary{
+    width:100%;background:var(--grad);color:#fff;border-radius:var(--radius);
+    padding:14px;font-size:15px;font-weight:800;margin-top:8px;
+  }
+  .btn-primary:hover{background:var(--grad-hover)}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+  .btn-outline{
+    width:100%;background:#fff;color:#444;border:1px solid var(--border);border-radius:var(--radius);
+    padding:12px;font-size:14px;font-weight:700;margin-top:8px;
+  }
+  .btn-outline:hover{background:var(--soft)}
+  .pix-summary{background:var(--soft);border-radius:var(--radius);padding:12px;margin-bottom:14px;text-align:center}
+  .pix-summary .qty-label{font-size:12px;color:var(--muted)}
+  .pix-summary .total-val{font-size:22px;font-weight:800;color:var(--green)}
+  .qr-wrap{display:flex;justify-content:center;margin:14px 0}
+  .qr-wrap img{width:180px;height:180px;border:1px solid var(--border);border-radius:8px}
+  .pix-code-box{
+    border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;
+    font-size:11px;word-break:break-all;color:#444;background:var(--soft);
+    margin-bottom:8px;line-height:1.5;
+  }
+  .btn-copy{
+    width:100%;background:#fff;border:1px solid var(--green);color:var(--green);
+    border-radius:var(--radius);padding:12px;font-size:14px;font-weight:700;margin-bottom:8px;
+  }
+  .btn-copy:hover{background:var(--green-light)}
+  .pix-instruction{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.6;margin:10px 0}
+  .pix-countdown{font-size:13px;font-weight:700;color:var(--green);text-align:center;margin:8px 0}
+  .phone-row{display:flex;gap:8px;margin-bottom:14px}
+  .phone-row .form-input{flex:1}
+  .btn-search{background:var(--grad);color:#fff;border-radius:var(--radius);padding:0 16px;font-size:14px;font-weight:700;height:44px;white-space:nowrap}
+  .ticket-card{border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px}
+  .ticket-date{font-size:11px;color:var(--muted);margin-bottom:6px}
+  .ticket-nums{display:flex;flex-wrap:wrap;gap:4px}
+  .ticket-num{background:var(--green-light);color:var(--green-dark);font-weight:700;font-size:11.5px;padding:3px 8px;border-radius:4px;font-variant-numeric:tabular-nums}
+  .tickets-empty{text-align:center;color:var(--muted);padding:24px 0;font-size:13px}
+  .spinner{width:22px;height:22px;border:3px solid rgba(40,167,69,.2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
   @media(max-width:380px){
     .slide-title{font-size:15.5px}
     .tier .t-thr{min-width:62px;font-size:12px}
@@ -343,6 +409,69 @@
 
   <!-- 13. FOOTER -->
   <footer>Copyright © 2026 Rifa Maquinários Agrícolas.</footer>
+</div>
+
+<!-- MODAL: CHECKOUT FORM -->
+<div class="modal-overlay" id="checkoutModal" role="dialog" aria-modal="true" aria-label="Checkout">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 class="modal-title">🛒 Finalizar Compra</h2>
+      <button class="modal-close" id="closeCheckout" aria-label="Fechar">✕</button>
+    </div>
+    <div class="pix-summary">
+      <div class="qty-label">Quantidade selecionada</div>
+      <div id="ckQty" style="font-size:15px;font-weight:700;margin:2px 0"></div>
+      <div class="total-val money" id="ckTotal"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="ckName">Nome completo</label>
+      <input class="form-input" id="ckName" type="text" placeholder="Seu nome" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="ckPhone">WhatsApp (com DDD)</label>
+      <input class="form-input" id="ckPhone" type="tel" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="tel">
+      <div class="form-hint">Usamos para enviar seus números após o pagamento</div>
+    </div>
+    <button class="btn-primary" id="ckSubmit">Gerar PIX &rarr;</button>
+  </div>
+</div>
+
+<!-- MODAL: PIX PAYMENT -->
+<div class="modal-overlay" id="pixModal" role="dialog" aria-modal="true" aria-label="Pagamento PIX">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 class="modal-title">💚 Pague com PIX</h2>
+      <button class="modal-close" id="closePix" aria-label="Fechar">✕</button>
+    </div>
+    <div class="pix-summary">
+      <div class="qty-label">Total a pagar</div>
+      <div class="total-val money" id="pixTotal"></div>
+    </div>
+    <div class="qr-wrap">
+      <img id="pixQrImg" src="" alt="QR Code PIX" width="180" height="180">
+    </div>
+    <p class="pix-instruction">Abra o app do seu banco → PIX → Ler QR Code<br>ou copie o código abaixo:</p>
+    <div class="pix-code-box" id="pixCodeBox"></div>
+    <button class="btn-copy" id="btnCopyPix">📋 Copiar código PIX</button>
+    <div class="pix-countdown" id="pixCountdown"></div>
+    <p class="pix-instruction" style="color:#888;font-size:10.5px">Após o pagamento seus números serão gerados automaticamente e ficam disponíveis em <strong>Meus Bilhetes</strong></p>
+    <button class="btn-outline" id="btnAlreadyPaid">✅ Já paguei — Ver meus bilhetes</button>
+  </div>
+</div>
+
+<!-- MODAL: MEUS BILHETES -->
+<div class="modal-overlay" id="meusModal" role="dialog" aria-modal="true" aria-label="Meus Bilhetes">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 class="modal-title">🎟️ Meus Bilhetes</h2>
+      <button class="modal-close" id="closeMeus" aria-label="Fechar">✕</button>
+    </div>
+    <div class="phone-row">
+      <input class="form-input" id="meusPhone" type="tel" placeholder="(11) 99999-9999" inputmode="tel" autocomplete="tel">
+      <button class="btn-search" id="meusSearch">Buscar</button>
+    </div>
+    <div id="meusResult"></div>
+  </div>
 </div>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -515,12 +644,12 @@
   }
   function setQty(n){
     n = Math.floor(Number(n) || 1);
-    qty = Math.min(100000, Math.max(1, n));
+    qty = Math.min(100000, Math.max(18, n));
     updateUI();
   }
   function changeQty(delta){ setQty(qty + delta); }
 
-  $('#btnClear').addEventListener('click', function(){ setQty(1); });
+  $('#btnClear').addEventListener('click', function(){ setQty(18); });
   $('#btnMinus').addEventListener('click', function(){ changeQty(-1); });
   $('#btnPlus').addEventListener('click',  function(){ changeQty(1); });
 
@@ -542,12 +671,141 @@
   qtyInput.addEventListener('blur', function(){ editing = false; setQty(qty); });
   qtyInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') qtyInput.blur(); });
 
+  /* ---------- modais ---------- */
+  var cdTimer = null;
+
+  function openModal(id){
+    var m = document.getElementById(id);
+    m.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    function bkClose(e){ if(e.target === m){ closeModal(id); m.removeEventListener('click', bkClose); } }
+    m.addEventListener('click', bkClose);
+  }
+  function closeModal(id){
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('closeCheckout').addEventListener('click', function(){ closeModal('checkoutModal'); });
+  document.getElementById('closePix').addEventListener('click', function(){ closeModal('pixModal'); });
+  document.getElementById('closeMeus').addEventListener('click', function(){ closeModal('meusModal'); });
+
   /* ---------- botões diversos ---------- */
-  $('#myTickets').addEventListener('click', function(){ toast('Em breve!'); });
   $('#menuBtn').addEventListener('click', function(){ toast('Menu em breve!'); });
-  $('#buyBtn').addEventListener('click', function(){
-    toast('Redirecionando para pagamento... ' + qty + ' números • ' + brl(qty*PRICE));
+
+  $('#myTickets').addEventListener('click', function(){
+    document.getElementById('meusResult').innerHTML = '';
+    var ph = sessionStorage.getItem('raifa_phone');
+    if(ph) document.getElementById('meusPhone').value = ph;
+    openModal('meusModal');
   });
+
+  $('#buyBtn').addEventListener('click', function(){
+    if(qty < 18){ toast('Mínimo de 18 números'); return; }
+    document.getElementById('ckQty').textContent = qty + ' números';
+    document.getElementById('ckTotal').textContent = brl(qty * PRICE);
+    document.getElementById('ckName').value = '';
+    document.getElementById('ckPhone').value = sessionStorage.getItem('raifa_phone') || '';
+    openModal('checkoutModal');
+  });
+
+  /* ---------- gerar PIX ---------- */
+  document.getElementById('ckSubmit').addEventListener('click', function(){
+    var name  = document.getElementById('ckName').value.trim();
+    var phone = document.getElementById('ckPhone').value.replace(/\D/g,'');
+    if(!name){ toast('Informe seu nome'); return; }
+    if(phone.length < 10){ toast('Informe um WhatsApp válido'); return; }
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Aguarde…';
+    fetch('/api/create-charge',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:name,phone:phone,qty:qty})
+    })
+    .then(function(r){
+      if(!r.ok) return r.json().then(function(d){ throw new Error(d.error||'Erro ao gerar PIX'); });
+      return r.json();
+    })
+    .then(function(data){
+      sessionStorage.setItem('raifa_phone', phone);
+      document.getElementById('pixTotal').textContent = brl((data.total||qty*35)/100);
+      document.getElementById('pixCodeBox').textContent = data.pix_code;
+      var img = document.getElementById('pixQrImg');
+      img.src = (data.qrcode_base64||'').startsWith('data:') ? data.qrcode_base64 : 'data:image/png;base64,'+data.qrcode_base64;
+      clearInterval(cdTimer);
+      var ends = Date.now() + 15*60*1000;
+      function tick(){
+        var rem = Math.max(0, ends - Date.now());
+        var m = Math.floor(rem/60000), s = Math.floor((rem%60000)/1000);
+        document.getElementById('pixCountdown').textContent = 'Expira em '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+        if(!rem) clearInterval(cdTimer);
+      }
+      tick(); cdTimer = setInterval(tick, 1000);
+      closeModal('checkoutModal');
+      openModal('pixModal');
+    })
+    .catch(function(err){ toast(err.message||'Erro ao gerar PIX. Tente novamente.'); })
+    .finally(function(){ btn.disabled=false; btn.innerHTML='Gerar PIX &rarr;'; });
+  });
+
+  /* ---------- copiar PIX ---------- */
+  document.getElementById('btnCopyPix').addEventListener('click', function(){
+    var code = document.getElementById('pixCodeBox').textContent;
+    function fbCopy(t){
+      var ta = document.createElement('textarea');
+      ta.value=t; ta.style.cssText='position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); toast('Código PIX copiado! ✓'); }
+      catch(e){ toast('Copie manualmente o código acima'); }
+      document.body.removeChild(ta);
+    }
+    if(navigator.clipboard){ navigator.clipboard.writeText(code).then(function(){ toast('Código PIX copiado! ✓'); }).catch(function(){ fbCopy(code); }); }
+    else { fbCopy(code); }
+  });
+
+  document.getElementById('btnAlreadyPaid').addEventListener('click', function(){
+    clearInterval(cdTimer);
+    closeModal('pixModal');
+    var ph = sessionStorage.getItem('raifa_phone');
+    if(ph) document.getElementById('meusPhone').value = ph;
+    openModal('meusModal');
+    searchTickets();
+  });
+
+  /* ---------- meus bilhetes ---------- */
+  document.getElementById('meusSearch').addEventListener('click', function(){ searchTickets(); });
+  document.getElementById('meusPhone').addEventListener('keydown', function(e){ if(e.key==='Enter') searchTickets(); });
+
+  function searchTickets(){
+    var phone = document.getElementById('meusPhone').value.replace(/\D/g,'');
+    if(phone.length < 10){ toast('Informe um WhatsApp válido'); return; }
+    var el = document.getElementById('meusResult');
+    el.innerHTML = '<div style="text-align:center;padding:20px"><span class="spinner"></span> Buscando…</div>';
+    fetch('/api/my-numbers',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({phone:phone})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      sessionStorage.setItem('raifa_phone', phone);
+      if(!data.purchases || !data.purchases.length){
+        el.innerHTML='<div class="tickets-empty">Nenhum bilhete encontrado para este número.</div>';
+        return;
+      }
+      var html='';
+      data.purchases.forEach(function(p){
+        var d = new Date(p.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+        var nums = (p.numbers||[]).map(function(n){ return '<span class="ticket-num">'+String(n).padStart(6,'0')+'</span>'; }).join('');
+        html+='<div class="ticket-card">';
+        html+='<div class="ticket-date">📅 '+d+' • '+p.qty+' números • <strong class="money">'+brl(p.amount/100)+'</strong></div>';
+        html+='<div class="ticket-nums">'+(nums||'<span style="color:var(--muted);font-size:11px">Aguardando confirmação de pagamento…</span>')+'</div>';
+        html+='</div>';
+      });
+      el.innerHTML = html;
+    })
+    .catch(function(){ el.innerHTML='<div class="tickets-empty">Erro ao buscar bilhetes. Tente novamente.</div>'; });
+  }
 
   /* ---------- 9. accordion ---------- */
   var accHead = $('#accHead'), accBody = $('#accBody'), accArrow = $('#accArrow');
