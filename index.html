@@ -552,9 +552,8 @@
   '</svg>';
 
   var SLIDES = [
-    { tag:'Adquira já!', title:'Trator New Holland T9 Ou 2 Milhões na Conta', sub:'Participe Agora!' },
-    { tag:'Adquira já!', title:'Trator New Holland T9 Ou 2 Milhões na Conta', sub:'Participe Agora!' },
-    { tag:'Adquira já!', title:'Trator New Holland T9 Ou 2 Milhões na Conta', sub:'Participe Agora!' }
+    { img:'/img/banner.webp',      tag:'Adquira já!', title:'Trator New Holland T9 Ou 2 Milhões na Conta', sub:'Participe Agora!' },
+    { img:'/img/banner%202.webp',  tag:'Adquira já!', title:'Trator New Holland T9 Ou 2 Milhões na Conta', sub:'Participe Agora!' }
   ];
 
   var track = $('#track'), dots = $('#dots'), slideIdx = 0, timer;
@@ -563,7 +562,7 @@
     var el = document.createElement('div');
     el.className = 'slide';
     el.innerHTML =
-      '<div class="scene"><img src="/img/banner.webp" alt="Banner Rifa" loading="eager"></div>'+
+      '<div class="scene"><img src="'+s.img+'" alt="Banner Rifa" loading="'+(i===0?'eager':'lazy')+'"></div>'+
       '<div class="shade"></div>'+
       '<div class="slide-body">'+
         '<span class="tag">'+s.tag+'</span>'+
