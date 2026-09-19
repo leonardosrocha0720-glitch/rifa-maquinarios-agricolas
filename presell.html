@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trator New Holland T9 ou 2 Milhões na Conta</title>
+<meta name="description" content="Concorra a um Trator New Holland T9 ou 2 Milhões na Conta. Participe agora!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/img/banner.webp">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+    background:#0b1a0b;
+  }
+  .hero{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    height:100dvh;
+    overflow:hidden;
+    background-image:url('/img/banner.webp');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+  }
+  .hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.45);
+  }
+  .content{
+    position:relative;
+    z-index:1;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px 20px;
+    padding-top:calc(24px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));
+  }
+  h1{
+    color:#fff;
+    text-transform:uppercase;
+    font-weight:900;
+    font-size:32px;
+    line-height:1.12;
+    letter-spacing:-.5px;
+    text-shadow:0 3px 12px rgba(0,0,0,.85),0 1px 3px rgba(0,0,0,.9);
+    max-width:16ch;
+  }
+  h1 .green{color:#22c55e;display:block}
+  .cta-line{
+    margin-top:18px;
+    color:#fff;
+    text-transform:uppercase;
+    font-weight:800;
+    font-size:16px;
+    letter-spacing:.5px;
+    text-shadow:0 2px 8px rgba(0,0,0,.85);
+  }
+  .btn{
+    display:block;
+    width:100%;
+    max-width:420px;
+    margin-top:26px;
+    background:#22c55e;
+    color:#fff;
+    text-decoration:none;
+    text-transform:uppercase;
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:.5px;
+    padding:18px 28px;
+    border:none;
+    border-radius:999px;
+    cursor:pointer;
+    font-family:inherit;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+    transition:transform .12s ease,background .15s ease;
+  }
+  .btn:hover{background:#1ea951}
+  .btn:active{transform:scale(.97)}
+
+  @media (min-width:768px){
+    h1{font-size:52px;max-width:18ch}
+    .cta-line{font-size:22px;margin-top:22px}
+    .btn{font-size:21px;padding:20px 40px;margin-top:32px}
+  }
+</style>
+</head>
+<body>
+  <main class="hero">
+    <div class="content">
+      <h1>
+        Trator New Holland T9
+        <span class="green">ou 2 Milhões na Conta!</span>
+      </h1>
+      <p class="cta-line">Clique no botão abaixo</p>
+      <a class="btn" href="https://SEU-LINK-AQUI.vercel.app">Quero participar</a>
+    </div>
+  </main>
+</body>
+</html>
